@@ -1,95 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.innovestudio.imagefilter.MainActivity">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <Button
-            android:id="@+id/camera"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="Camera" />
-
-        <Button
-            android:id="@+id/gallery"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="Gallery" />
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="Save"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp" />
-
-    <LinearLayout
-        android:id="@+id/color_view"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:background="@color/colorAccent"
         android:orientation="vertical"
-        android:visibility="gone">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        tools:context="com.innovestudio.imagefilter.MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/camera"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Tolerance" />
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Camera" />
 
-            <TextView
-                android:id="@+id/tolerance"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/gallery"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="0" />
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Gallery" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Save"
+                android:visibility="gone" />
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/seek_bar"
+
+        <LinearLayout
+            android:id="@+id/color_view"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:background="@color/colorAccent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="100" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Tolerance" />
+
+                <TextView
+                    android:id="@+id/tolerance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="0" />
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
+
+
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

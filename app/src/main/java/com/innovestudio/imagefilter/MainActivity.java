@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int EXTERNAL_STORAGE_PERMISSION_CODE = 9;
     private static final int CAMERA_PERMISSION_CODE = 10;
     private static final int REQUEST_IMAGE_CAPTURE = 3000;
+    private static final int TARGET_WIDTH = 1024;
     private Button selectFromGallery;
     private String TAG = "MainActivity";
     private ImageView imageView;
@@ -157,18 +159,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case SELECT_PHOTO:
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult: " + data.getData().getPath());
-                    imageView.setImageURI(data.getData());
-                    selectedX = selectedY = -1;
-                    save.setVisibility(View.GONE);
-                    seekBar.setProgress(0);
+                    Log.d(TAG, "onActivityResult: " + data.getData().toString());
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                        Bitmap resizedBmp = getResizedBitmap(bitmap);
+                        Log.d(TAG, "onActivityResult: " + bitmap.getWidth());
+                        imageView.setImageBitmap(resizedBmp);
+                        selectedX = selectedY = -1;
+                        save.setVisibility(View.GONE);
+                        seekBar.setProgress(0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
                 }
                 break;
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    imageView.setImageBitmap(imageBitmap);
+                    Bitmap resizedBmp = getResizedBitmap(imageBitmap);
+                    imageView.setImageBitmap(resizedBmp);
                     selectedX = selectedY = -1;
                     save.setVisibility(View.GONE);
                     seekBar.setProgress(0);
@@ -176,6 +191,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
+    }
+
+    private Bitmap getResizedBitmap(Bitmap bitmap) {
+        if(bitmap.getWidth()>TARGET_WIDTH){
+            return bitmap;
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float aspectRatio = (float) width/height;
+        int newWidth = TARGET_WIDTH;
+        int newHeight = (int) (newWidth/aspectRatio);
+
+        return Bitmap.createScaledBitmap(bitmap,newWidth,newHeight,false);
+
     }
 
     @Override
