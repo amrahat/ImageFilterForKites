@@ -1,4 +1,4 @@
-package com.innovestudio.imagefilter;
+package com.amrahat.imagefilter.GrayScaleFilter;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,18 +13,22 @@ import java.util.Queue;
 public class QueueLinearFloodFiller {
 
     protected Bitmap image = null;
-    protected int[] tolerance = new int[] { 0, 0, 0 };
+    protected int[] tolerance = new int[]{0, 0, 0};
     protected int width = 0;
     protected int height = 0;
     protected int[] pixels = null;
     protected int fillColor = 0;
-    protected int[] startColor = new int[] { 0, 0, 0 };
+    protected int[] startColor = new int[]{0, 0, 0};
     protected boolean[] pixelsChecked;
     protected Queue<FloodFillRange> ranges;
 
     // Construct using an image and a copy will be made to fill into,
     // Construct with BufferedImage and flood fill will write directly to
     // provided BufferedImage
+
+    public QueueLinearFloodFiller() {
+    }
+
     public QueueLinearFloodFiller(Bitmap img) {
         copyImage(img);
     }
@@ -59,7 +63,7 @@ public class QueueLinearFloodFiller {
     }
 
     public void setTolerance(int value) {
-        tolerance = new int[] { value, value, value };
+        tolerance = new int[]{value, value, value};
     }
 
     public Bitmap getImage() {
@@ -169,7 +173,8 @@ public class QueueLinearFloodFiller {
 
         while (true) {
             // **fill with the color
-            pixels[pxIdx] = fillColor;
+            pixels[pxIdx] = getGrayScaleColor(pxIdx);
+
 
             // **indicate that this pixel has already been checked and filled
             pixelsChecked[pxIdx] = true;
@@ -193,7 +198,9 @@ public class QueueLinearFloodFiller {
 
         while (true) {
             // **fill with the color
-            pixels[pxIdx] = fillColor;
+
+
+            pixels[pxIdx] = getGrayScaleColor(pxIdx);
 
             // **indicate that this pixel has already been checked and filled
             pixelsChecked[pxIdx] = true;
@@ -215,6 +222,30 @@ public class QueueLinearFloodFiller {
 
         ranges.offer(r);
     }
+
+    private int getGrayScaleColor(int pxIdx) {
+        int y = pxIdx / image.getWidth();
+        int x = pxIdx - (y * image.getWidth());
+
+        int pxl = image.getPixel(x, y);
+        int A = Color.alpha(pxl);
+        int R = Color.red(pxl);
+        int G = Color.green(pxl);
+        int B = Color.blue(pxl);
+        // take conversion up to one single value
+        R = G = B = (int) (0.299 * R + 0.587 * G + 0.114 * B);
+        // set new pixel color to output bitmap
+        return Color.argb(A, R, G, B);
+    }
+
+   /* private int getColorFromPixel(int selectedX, int selectedY) {
+        int alpha = Color.alpha(pxl);
+        int redComponent = Color.red(pxl);
+        int greenComponent = Color.green(pxl);
+        int blueComponent = Color.blue(pxl);
+        return Color.argb(alpha, redComponent, greenComponent, blueComponent);
+
+    }*/
 
     // Sees if a pixel is within the color tolerance range.
     protected boolean CheckPixel(int px) {
@@ -241,4 +272,6 @@ public class QueueLinearFloodFiller {
             this.Y = y;
         }
     }
+
+
 }

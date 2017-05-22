@@ -1,4 +1,4 @@
-package com.innovestudio.imagefilter;
+package com.amrahat.imagefilter;
 
 import org.junit.Test;
 
