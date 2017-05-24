@@ -35,11 +35,11 @@ public class GrayScaleTask extends AsyncTask<Void,Void,Void> {
         this.progressDialog = new ProgressDialog(context);
     }
 
-    public GrayScaleTask(Context applicationContext,OnGreyScalingDone onGreyScalingDone) {
+    public GrayScaleTask(Context applicationContext,OnGreyScalingDone onGreyScalingDone,QueueLinearFloodFiller queueLinearFloodFiller) {
         this.context = applicationContext;
         this.onGreyScalingDone = onGreyScalingDone;
         this.progressDialog = new ProgressDialog(applicationContext);
-        queueLinearFloodFiller = new QueueLinearFloodFiller();
+        this.queueLinearFloodFiller = queueLinearFloodFiller;
     }
 
 
@@ -54,10 +54,10 @@ public class GrayScaleTask extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         //QueueLinearFloodFiller queueLinearFloodFiller = new QueueLinearFloodFiller(image, targetColor, newColor);
-        queueLinearFloodFiller.useImage(image);
+        /*queueLinearFloodFiller.useImage(image);
         queueLinearFloodFiller.setTargetColor(targetColor);
         queueLinearFloodFiller.setFillColor(newColor);
-        queueLinearFloodFiller.setTolerance(tolerance);
+        queueLinearFloodFiller.setTolerance(tolerance);*/
         queueLinearFloodFiller.floodFill(selectedX, selectedY);
         return null;
     }

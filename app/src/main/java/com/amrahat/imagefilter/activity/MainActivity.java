@@ -28,6 +28,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amrahat.imagefilter.GrayScaleFilter.QueueLinearFloodFiller;
 import com.amrahat.imagefilter.R;
 import com.amrahat.imagefilter.asynctask.GrayScaleTask;
 import com.amrahat.imagefilter.interfaces.ImageViewOnTouchActionUp;
@@ -66,14 +67,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean forCamera = false;
     private float startY, startX;
     GrayScaleTask grayScaleTask;
+    private QueueLinearFloodFiller queueLinearFloodFiller;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        queueLinearFloodFiller = new QueueLinearFloodFiller();
 
-        grayScaleTask = new GrayScaleTask(this, this);
+        //grayScaleTask = new GrayScaleTask(this, this);
 
         initView();
         initListensers();
@@ -200,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     try {
                         //bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
                         imageView.setImageResource(0);
+                        queueLinearFloodFiller = new QueueLinearFloodFiller();
                         bitmap = handleSamplingAndRotationBitmap(getApplicationContext(), data.getData());
                         Bitmap resizedBmp = getResizedBitmap(bitmap);
                         Log.d(TAG, "onActivityResult: " + bitmap.getWidth());
@@ -226,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         /*Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(
                                 getContentResolver(), capturedImageUri);*/
                         imageView.setImageResource(0);
+                        queueLinearFloodFiller = new QueueLinearFloodFiller();
                         Bitmap imageBitmap = handleSamplingAndRotationBitmap(getApplicationContext(), capturedImageUri);
                         Bitmap resizedBmp = getResizedBitmap(imageBitmap);
                         imageView.setImageBitmap(resizedBmp);
@@ -317,12 +322,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void floodFill() {
         lastTouchedBmp = Bitmap.createBitmap(imgbmp);
         lastTouchedBmp.setHasAlpha(true);
-        /*GrayScaleTask grayScaleTask = new GrayScaleTask(targetColor, newColor, imgbmp, seekBar.getProgress(), selectedX, selectedY, this, this);
+
+        queueLinearFloodFiller.useImage(imgbmp);
+        queueLinearFloodFiller.setTargetColor(targetColor);
+        queueLinearFloodFiller.setFillColor(newColor);
+        queueLinearFloodFiller.setTolerance(seekBar.getProgress());
+        setTaskVariablesAndExecute();
+  /*GrayScaleTask grayScaleTask = new GrayScaleTask(targetColor, newColor, imgbmp, seekBar.getProgress(), selectedX, selectedY, this, this);
         grayScaleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
 /*QueueLinearFloodFiller queueLinearFloodFiller = new QueueLinearFloodFiller(imgbmp,targetColor,newColor);
         queueLinearFloodFiller.setTolerance(seekBar.getProgress());
         queueLinearFloodFiller.floodFill(selectedX,selectedY);*/
-        setTaskVariablesAndExecute();
 
 
     }
@@ -330,6 +340,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void floodFillTolerance() {
         imgbmp = Bitmap.createBitmap(lastTouchedBmp);
         imgbmp.setHasAlpha(true);
+
+        queueLinearFloodFiller.useImage(imgbmp);
+        queueLinearFloodFiller.setTargetColor(targetColor);
+        queueLinearFloodFiller.setFillColor(newColor);
+        queueLinearFloodFiller.setTolerance(seekBar.getProgress());
+
         setTaskVariablesAndExecute();
         /*GrayScaleTask grayScaleTask = new GrayScaleTask(targetColor, newColor, imgbmp, seekBar.getProgress(), selectedX, selectedY, this, this);
         grayScaleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
@@ -340,11 +356,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setTaskVariablesAndExecute() {
-        grayScaleTask = new GrayScaleTask(this, this);
-        grayScaleTask.setImage(imgbmp);
+        grayScaleTask = new GrayScaleTask(this, this, queueLinearFloodFiller);
+        /*grayScaleTask.setImage(imgbmp);
         grayScaleTask.setTargetColor(targetColor);
         grayScaleTask.setNewColor(newColor);
-        grayScaleTask.setTolerance(seekBar.getProgress());
+        grayScaleTask.setTolerance(seekBar.getProgress());*/
         grayScaleTask.setSelectedX(selectedX);
         grayScaleTask.setSelectedY(selectedY);
         grayScaleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
